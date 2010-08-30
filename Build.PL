@@ -9,7 +9,7 @@ my $build = Module::Build->new(
     dist_author => 'Chad Granum <exodist7@gmail.com>',
     create_readme => 1,
     requires => {
-        'Devel::Declare::Parser' => 0.018,
+        'Devel::Declare::Parser' => 0.017,
         'Exporter::Declare' => 0.023,
     },
     meta_merge => {
