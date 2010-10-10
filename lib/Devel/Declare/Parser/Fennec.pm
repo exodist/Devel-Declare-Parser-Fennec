@@ -3,10 +3,10 @@ use strict;
 use warnings;
 
 use Devel::Declare::Interface;
-use base 'Exporter::Declare::Parser';
+use base 'Exporter::Declare::Magic::Parser';
 BEGIN { Devel::Declare::Interface::register_parser( 'fennec' )};
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 our %NAMELESS;
 sub nameless { $NAMELESS{ $_[-1] }++ }
 sub is_nameless { $NAMELESS{ shift->name }}
