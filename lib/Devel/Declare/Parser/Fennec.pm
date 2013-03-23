@@ -4,14 +4,14 @@ use warnings;
 
 use Devel::Declare::Interface;
 use base 'Exporter::Declare::Magic::Parser';
-BEGIN { Devel::Declare::Interface::register_parser( 'fennec' )};
+BEGIN { Devel::Declare::Interface::register_parser('fennec') }
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 our %NAMELESS;
-sub nameless { $NAMELESS{ $_[-1] }++ }
-sub is_nameless { $NAMELESS{ shift->name }}
+sub nameless    { $NAMELESS{$_[-1]}++ }
+sub is_nameless { $NAMELESS{shift->name} }
 
-sub args {(qw/name/)}
+sub args { (qw/name/) }
 
 sub inject {
     my $self = shift;
@@ -29,38 +29,39 @@ sub rewrite {
     $self->_check_parts;
 
     my $is_arrow = $self->parts->[1]
-                && ($self->parts->[1] eq '=>' || $self->parts->[1] eq ',');
+        && ( $self->parts->[1] eq '=>' || $self->parts->[1] eq ',' );
     if ( $is_arrow && $self->parts->[2] ) {
         my $is_ref = ref( $self->parts->[2] );
         my $is_sub = $is_ref ? $self->parts->[2]->[0] eq 'sub' : 0;
 
         if ( !$is_ref ) {
-            $self->new_parts([ $self->parts->[0], $self->parts->[2] ]);
+            $self->new_parts( [$self->parts->[0], $self->parts->[2]] );
             return 1;
         }
-        elsif ( $is_sub ) {
-            $self->new_parts([ $self->parts->[0] ]);
+        elsif ($is_sub) {
+            $self->new_parts( [$self->parts->[0]] );
             return 1;
         }
         else {
-            $self->bail( 'oops' );
+            $self->bail('oops');
         }
     }
 
     my ( $names, $specs ) = $self->sort_parts();
-    $self->new_parts([
-        @$names,
-        @$specs
+    $self->new_parts(
+        [
+            @$names,
+            @$specs
             ? (
                 ( map { $_->[0] } @$specs ),
                 ['method']
-            )
+                )
             : ()
-    ]);
+        ]
+    );
 
     1;
 }
-
 
 1;
 
